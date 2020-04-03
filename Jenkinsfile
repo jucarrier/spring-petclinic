@@ -19,8 +19,10 @@ pipeline {
       }
     }
     stage('Deploy') {
+      git_branch_local=$(echo $GIT_BRANCH   | sed -e "s|origin/||g")
+      echo GIT_BRANCH_LOCAL=$git_branch_local > build.properties
       when {
-        expression {${GIT_BRANCH#*/} == 'master'}
+        expression {${git_branch_local} == 'master'}
       }
                     steps {
                       sh './mvnw deploy'

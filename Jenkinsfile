@@ -4,7 +4,10 @@ pipeline {
     stage('Build') {
       steps {
         sh './mvnw compile'
-        catchError(catchInterruptions: true, buildResult: 'Fail', message: 'Failure', stageResult: 'Fail')
+        catchError(catchInterruptions: true, buildResult: 'Fail', message: 'Failure', stageResult: 'Fail') {
+          mail(subject: '${env.BUILD_NUMBER} has failed', body: '${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\\n Has failed', from: 'Jenkins <Jenkins@Jenkins>', to: '[$class: \'DevelopersRecipientProvider\']')
+        }
+
       }
     }
 
